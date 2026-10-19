@@ -1,0 +1,2 @@
+export function destinationPhone(value:string){const number=value.replace(/[\s()-]/g,'');if(!/^\+(91|1)\d{10}$/.test(number))throw new Error('Use an Indian +91 or USA +1 number with 10 national digits');return number}
+export const escapeXML=(value:string)=>value.replace(/[<>&'\"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;',"'":'&apos;','"':'&quot;'}[c]??c))

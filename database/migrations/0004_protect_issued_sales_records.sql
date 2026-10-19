@@ -1,0 +1,2 @@
+CREATE FUNCTION public.protect_issued_document() RETURNS trigger LANGUAGE plpgsql SET search_path=public AS $$ BEGIN IF OLD.status='Cancelled' AND NEW.status<>'Cancelled' THEN RAISE EXCEPTION 'Cancelled documents cannot be reopened'; END IF; IF OLD.status='Issued' AND NEW.status='Draft' THEN RAISE EXCEPTION 'Issued documents cannot return to draft'; END IF; RETURN NEW; END $$;
+CREATE TRIGGER protect_issued_document BEFORE UPDATE ON public.sales_documents FOR EACH ROW EXECUTE FUNCTION public.protect_issued_document();

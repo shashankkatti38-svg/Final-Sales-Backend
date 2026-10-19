@@ -1,0 +1,132 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792050174157,
+      "tag": "0000_crm_foundation",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792050518408,
+      "tag": "0001_restrict_signup_trigger_execution",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792050762824,
+      "tag": "0002_sales_documents_payments_and_field_tools",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792050971834,
+      "tag": "0003_product_catalog_and_document_validation",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792051012578,
+      "tag": "0004_protect_issued_sales_records",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792051460261,
+      "tag": "0005_ai_status_and_private_call_logs",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792051626631,
+      "tag": "0006_restrict_call_log_and_ai_status_writes",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792052057190,
+      "tag": "0007_team_members_assignment_address",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792052793024,
+      "tag": "0008_incoming_caller_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792054697086,
+      "tag": "0009_attendance_and_digital_cards",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792056314193,
+      "tag": "0010_distribution_targets_automations",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1792076703430,
+      "tag": "0011_call_recording_details_retention",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1792080787790,
+      "tag": "0012_content_files_and_tags",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1792080961043,
+      "tag": "0013_task_voice_notes_notifications",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1792081095386,
+      "tag": "0014_admin_assign_tasks",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1792081248153,
+      "tag": "0015_product_photos_location_sharing_shift",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1792081284357,
+      "tag": "0016_attendance_server_times",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1792081568782,
+      "tag": "0017_quotation_approval_portal_renewals",
+      "breakpoints": true
+    }
+  ]
+}
