@@ -1,19 +1,25 @@
-import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient } from "@/lib/supabase";
 import { getRecordingPlaybackUrl } from "@/lib/s3";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+/**
+ * GET /api/recordings
+ * Function: List authorized recordings from database with temporary stream URLs
+ */
+export async function GET(req: Request) {
   try {
-    const { data: calls, error } = await supabase
+    const supabaseClient = getSupabaseClient(req);
+
+    const { data: calls, error } = await supabaseClient
       .from("call_logs")
       .select("*")
       .not("recording_path", "is", null)
       .order("created_at", { ascending: false });
 
     if (error) {
-      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+      console.error("Fetch recordings error:", error);
+      return Response.json({ success: false, error: error.message }, { status: 500 });
     }
 
     const recordings = await Promise.all(
@@ -23,21 +29,21 @@ export async function GET() {
 
         if (path.startsWith("http")) {
           streamUrl = path;
-        } else if (path.startsWith("recordings/org_") || path.startsWith("recordings/")) {
+        } else if (path.startsWith("recordings/")) {
           try {
             streamUrl = await getRecordingPlaybackUrl(path, 3600);
           } catch {
-            streamUrl = supabase.storage.from("call-recordings").getPublicUrl(path).data.publicUrl;
+            streamUrl = supabaseClient.storage.from("call-recordings").getPublicUrl(path).data.publicUrl;
           }
-        } else {
-          streamUrl = supabase.storage.from("call-recordings").getPublicUrl(path).data.publicUrl;
+        } else if (path) {
+          streamUrl = supabaseClient.storage.from("call-recordings").getPublicUrl(path).data.publicUrl;
         }
 
         return {
           id: c.id,
           callId: c.id,
-          toNumber: c.to_number ? `+${c.to_number}` : "Unknown",
-          fromNumber: c.from_number ? `+${c.from_number}` : "Unknown",
+          toNumber: c.to_number ? `+${String(c.to_number).replace(/^\+/, "")}` : "Unknown",
+          fromNumber: c.from_number ? `+${String(c.from_number).replace(/^\+/, "")}` : "Unknown",
           status: c.status || "completed",
           duration: c.duration || 0,
           recordingPath: c.recording_path,
@@ -48,8 +54,13 @@ export async function GET() {
       })
     );
 
-    return NextResponse.json({ success: true, recordings });
+    return Response.json({
+      success: true,
+      count: recordings.length,
+      recordings,
+    });
   } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    console.error("List recordings error:", err);
+    return Response.json({ success: false, error: err.message }, { status: 500 });
   }
 }

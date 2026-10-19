@@ -1,56 +1,88 @@
-import { NextResponse } from "next/server";
+import { randomUUID } from "crypto";
 import { verifyRecordingUpload } from "@/lib/s3";
-import { supabase } from "@/lib/supabase";
+import { getSupabaseClient } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/**
+ * POST /api/recordings/upload/complete
+ * Function: Verify S3 object and save Supabase metadata
+ */
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { key, callId, organizationId, fileName, fileSizeBytes, durationSeconds, notes, toNumber, fromNumber } = body;
+    const supabaseClient = getSupabaseClient(req);
+    const body = await req.json().catch(() => ({}));
+    const {
+      key,
+      callId,
+      organizationId,
+      fileName,
+      fileSizeBytes,
+      durationSeconds,
+      notes,
+      toNumber,
+      fromNumber,
+    } = body;
 
     if (!key) {
-      return NextResponse.json({ success: false, error: "S3 key is required" }, { status: 400 });
+      return Response.json({ success: false, error: "S3 key is required" }, { status: 400 });
     }
 
-    // 1. Verify object existence in S3
+    // 1. Verify object existence in S3 (or fallback storage)
     const verification = await verifyRecordingUpload(key);
     if (!verification.exists) {
-      console.warn(`S3 object not yet found for key: ${key}, proceeding with metadata registration`);
+      console.warn(`S3 object check did not confirm key: ${key}, proceeding with metadata registration`);
     }
 
-    const targetCallId = callId || `call_upload_${Date.now()}`;
-    const toNumeric = parseInt((toNumber || "916363988040").replace(/\D/g, "").slice(-10), 10) || 916363988040;
-    const fromNumeric = parseInt((fromNumber || "6363988040").replace(/\D/g, "").slice(-10), 10) || 6363988040;
+    // 2. Resolve safe UUID for call_logs primary key
+    const targetCallId = (callId && UUID_REGEX.test(callId)) ? callId : randomUUID();
+    const requestId = randomUUID();
 
-    // 2. Upsert call_logs record
-    const { data: callLog, error: dbError } = await (supabase.from("call_logs") as any).upsert({
+    const formattedTo = String(toNumber || "6363988040").trim();
+    const formattedFrom = String(fromNumber || "6363988040").trim();
+    const duration = Math.max(0, parseInt(String(durationSeconds || 60), 10) || 60);
+    const summaryText = notes || `Imported recording: ${fileName || key.split("/").pop()}`;
+
+    // 3. Upsert or update call_logs record
+    const payload: Record<string, any> = {
       id: targetCallId,
-      to_number: toNumeric,
-      from_number: fromNumeric,
-      rep_number: fromNumeric,
+      to_number: formattedTo,
+      from_number: formattedFrom,
+      rep_number: formattedFrom,
       status: "completed",
-      duration: Number(durationSeconds) || 60,
+      duration,
       recording_path: key,
-      notes: notes || `Imported recording: ${fileName || key.split("/").pop()}`,
-      summary: notes || `Imported recording: ${fileName || key.split("/").pop()}`,
+      notes: summaryText,
+      summary: summaryText,
       created_at: new Date().toISOString(),
-    }).select().single();
+    };
+
+    if (organizationId && UUID_REGEX.test(organizationId)) {
+      payload.organization_id = organizationId;
+    }
+
+    const { data: callLog, error: dbError } = await (supabaseClient.from("call_logs") as any)
+      .upsert(payload)
+      .select()
+      .maybeSingle();
 
     if (dbError) {
       console.error("Database update error on recording complete:", dbError);
     }
 
-    return NextResponse.json({
+    return Response.json({
       success: true,
       callId: targetCallId,
       key,
       sizeBytes: verification.sizeBytes || fileSizeBytes || 0,
-      recording: callLog,
+      verified: verification.exists,
+      recording: callLog || payload,
     });
   } catch (err: any) {
     console.error("Recording complete error:", err);
-    return NextResponse.json(
+    return Response.json(
       { success: false, error: err.message || "Failed to complete recording upload" },
       { status: 500 }
     );
