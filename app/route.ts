@@ -1,9 +1,19 @@
+import { checkDatabaseConnection } from "@/lib/supabase";
+
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const dbHealth = await checkDatabaseConnection();
+
   return Response.json({
     service: "LeadConnect CRM API",
-    status: "healthy",
+    status: dbHealth.connected ? "healthy" : "degraded",
+    database: {
+      status: dbHealth.connected ? "connected" : "error",
+      target: "supabase-postgresql",
+      leadsTableAvailable: dbHealth.connected,
+      error: dbHealth.error || null,
+    },
     timestamp: new Date().toISOString(),
     endpoints: {
       health: "/",
