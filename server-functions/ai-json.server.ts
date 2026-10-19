@@ -1,7 +1,7 @@
 import {createOpenAI} from '@ai-sdk/openai'
 import {streamText,Output,NoObjectGeneratedError,APICallError} from 'ai'
 import type {z} from 'zod'
-import {createLovableAiGatewayRunIdFetch,getLovableAiGatewayRunId} from './ai/run-id.server.ts'
+import {createLovableAiGatewayRunIdFetch,getLovableAiGatewayRunId} from '@/ai/run-id.server'
 
 export type AiResult<T>={ok:true;data:T}|{ok:false;status:number;message:string}
 

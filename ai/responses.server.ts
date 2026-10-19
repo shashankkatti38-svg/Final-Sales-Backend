@@ -5,7 +5,7 @@ import {
   createLovableAiGatewayRunIdFetch,
   getLovableAiGatewayRunId,
   withLovableAiGatewayRunIdHeader,
-} from "./run-id.server.ts";
+} from "./run-id.server";
 
 export function createResponsesCall(
   request: Request,

@@ -1,6 +1,6 @@
 import {createOpenAI} from '@ai-sdk/openai'
 import {streamText,Output,NoObjectGeneratedError,APICallError} from 'ai'
-import {createLovableAiGatewayRunIdFetch,getLovableAiGatewayRunId} from './ai/run-id.server.ts'
+import {createLovableAiGatewayRunIdFetch,getLovableAiGatewayRunId} from '@/ai/run-id.server'
 import {recommendationSchema} from './ai-followup-schema'
 export async function generateFollowup(request:Request,profile:unknown){
  const key=process.env['LOVABLE_API_KEY'];if(!key)return {ok:false as const,status:401,message:'Lovable AI is not configured.'}
