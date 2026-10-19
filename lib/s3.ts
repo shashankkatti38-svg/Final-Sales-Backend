@@ -120,29 +120,41 @@ export async function verifyRecordingUpload(key: string) {
   }
 }
 
+function normalizeS3Key(key: string): string {
+  let clean = (key || "").trim();
+  if (clean.startsWith("s3://")) {
+    const afterScheme = clean.slice(5);
+    const slashIdx = afterScheme.indexOf("/");
+    clean = slashIdx !== -1 ? afterScheme.slice(slashIdx + 1) : afterScheme;
+  }
+  return clean;
+}
+
 export async function getRecordingPlaybackUrl(key: string, expiresIn = 3600) {
+  const cleanKey = normalizeS3Key(key);
   try {
     const command = new GetObjectCommand({
       Bucket: bucket,
-      Key: key,
+      Key: cleanKey,
     });
     return await getSignedUrl(s3, command, { expiresIn });
   } catch {
-    return supabase.storage.from("call-recordings").getPublicUrl(key).data.publicUrl;
+    return supabase.storage.from("call-recordings").getPublicUrl(cleanKey).data.publicUrl;
   }
 }
 
 export async function getRecordingDownloadUrl(key: string, customFileName?: string, expiresIn = 3600) {
+  const cleanKey = normalizeS3Key(key);
   try {
-    const filename = customFileName || key.split("/").pop() || "recording.mp3";
+    const filename = customFileName || cleanKey.split("/").pop() || "recording.mp3";
     const command = new GetObjectCommand({
       Bucket: bucket,
-      Key: key,
+      Key: cleanKey,
       ResponseContentDisposition: `attachment; filename="${encodeURIComponent(filename)}"`,
     });
     return await getSignedUrl(s3, command, { expiresIn });
   } catch {
-    return supabase.storage.from("call-recordings").getPublicUrl(key).data.publicUrl;
+    return supabase.storage.from("call-recordings").getPublicUrl(cleanKey).data.publicUrl;
   }
 }
 
