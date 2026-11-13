@@ -1,10 +1,12 @@
 FROM node:20-alpine AS base
+# libc6-compat is required for Next.js 15 SWC native binary on Alpine musl
+RUN apk add --no-cache libc6-compat
 
 # Step 1: Dependencies
 FROM base AS deps
 WORKDIR /app
 COPY package*.json ./
-RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+RUN npm install
 
 # Step 2: Build
 FROM base AS builder
@@ -12,6 +14,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
 # Step 3: Runner
