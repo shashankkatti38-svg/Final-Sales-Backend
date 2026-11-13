@@ -15,6 +15,7 @@
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "resend": "^6.37.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {
