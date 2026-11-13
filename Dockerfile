@@ -1,4 +1,4 @@
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 # libc6-compat is required for Next.js 15 SWC native binary on Alpine musl
 RUN apk add --no-cache libc6-compat
 
