@@ -1,0 +1,513 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RbacDataScope {
+  PLATFORM
+  ORGANIZATION
+  TEAM
+  REPORTING_TREE
+  ASSIGNED
+  PROJECT_MEMBER
+  OWN
+  NONE
+
+  @@map("rbac_data_scope")
+}
+
+enum RbacAccountStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  INVITED
+  PENDING_VERIFICATION
+
+  @@map("rbac_account_status")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Organization {
+  id                       String    @id
+  owner_id                 String?
+  name                     String?
+  created_at               DateTime? @db.Timestamptz(6)
+  followup_enabled         String?
+  followup_days            BigInt?
+  bank_details             String?
+  invite_code              String?
+  auto_assign              String?
+  rr_cursor                BigInt?
+  recording_retention_days BigInt?
+  shift_start              String?
+  shift_end                String?   @default("18:30:00")
+  status                   String?   @default("ACTIVE")
+  deleted_at               DateTime? @db.Timestamptz(6)
+  website                  String?
+  phone                    String?
+  industry                 String?
+  address                  String?
+  city                     String?
+  state                    String?
+  country                  String?   @default("India")
+  tax_id                   String?
+  plan                     String?   @default("ENTERPRISE")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model activities {
+  id              String  @id
+  organization_id String?
+  owner_id        String?
+  lead_id         String?
+  type            String?
+  notes           String?
+  occurred_at     String?
+  created_at      String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model ai_access_state {
+  owner_id   String  @id
+  blocked    String?
+  status     String?
+  message    String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @updatedAt @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model attendance {
+  id              String    @id
+  owner_id        String?
+  organization_id String?
+  check_in        DateTime? @db.Timestamptz(6)
+  check_out       DateTime? @db.Timestamptz(6)
+  in_lat          Float?
+  in_lng          Float?
+  out_lat         Float?
+  out_lng         Float?
+  notes           String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @updatedAt @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model automation_rules {
+  id              String  @id
+  organization_id String?
+  name            String?
+  trigger_event   String?
+  match_status    String?
+  action          String?
+  task_title      String?
+  due_days        String?
+  label           String?
+  active          String?
+  runs            String?
+  created_at      String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model call_logs {
+  id                   String    @id
+  owner_id             String?
+  organization_id      String?
+  lead_id              String?
+  request_id           String?
+  provider_sid         String?
+  status               String?
+  from_number          BigInt?
+  rep_number           BigInt?
+  to_number            BigInt?
+  recording_consent    String?
+  recording_sid        String?
+  recording_path       String?
+  duration             BigInt?
+  created_at           DateTime? @db.Timestamptz(6)
+  transcript           String?
+  summary              String?
+  recording_deleted_at String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model content_files {
+  id              String    @id
+  organization_id String?
+  owner_id        String?
+  title           String?
+  body            String?
+  category        String?
+  created_at      DateTime? @db.Timestamptz(6)
+  tag             String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model content_pages {
+  id         BigInt   @id @default(autoincrement())
+created_at DateTime @default(now()) @db.Timestamptz(6)
+updated_at DateTime @updatedAt @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model digital_cards {
+  owner_id   String   @id @unique(map: "digital_cards_owner_id_unique") @db.Uuid
+  slug       String   @unique
+  full_name  String   @default("")
+  title      String   @default("")
+  company    String   @default("")
+  phone      String   @default("")
+  whatsapp   String   @default("")
+  email      String   @default("")
+  website    String   @default("")
+  address    String   @default("")
+  about      String   @default("")
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model inbound_numbers {
+  id              String  @id
+  organization_id String?
+  phone_number    String?
+  provider_sid    String?
+  forward_to      String?
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @updatedAt @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model incoming_calls {
+  id              String  @id
+  organization_id String?
+  call_sid        String?
+  from_number     String?
+  to_number       String?
+  lead_id         String?
+  lead_name       String?
+  lead_company    String?
+  created_at      String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model leads {
+  id              String    @id
+  organization_id String?
+  owner_id        String?
+  name            String?
+  company         String?
+  email           String?
+  phone           BigInt?
+  value           Float?
+  status          String?
+  label           String?
+  source          String?
+  contacted       String?
+  created_at      DateTime? @db.Timestamptz(6)
+  address         String?
+  assigned_to     String?
+  renewal_date    String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model location_checkins {
+  id              String    @id
+  owner_id        String?
+  organization_id String?
+  lead_id         String?
+  latitude        Float?
+  longitude       Float?
+  accuracy        BigInt?
+  notes           String?
+  created_at      DateTime? @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model location_shares {
+  id              String    @id
+  owner_id        String?
+  organization_id String?
+  status          String?
+  lat             Float?
+  lng             Float?
+  accuracy        BigInt?
+  started_at      DateTime? @db.Timestamptz(6)
+  reported_at     DateTime? @db.Timestamptz(6)
+  ended_at        String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model notification_reads {
+  user_id String
+  key     String
+  read_at DateTime? @db.Timestamptz(6)
+
+  @@id([user_id, key])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model payments {
+  id         BigInt   @id @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model products {
+  id              String  @id
+  organization_id String?
+  owner_id        String?
+  name            String?
+  sku             String?
+  price           String?
+  created_at      String?
+  category        String?
+  active          String?
+  image_path      String?
+  description     String?
+  unit            String?
+  gst_rate        String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model profiles {
+  id           String    @id
+  display_name String?
+  avatar_url   String?
+  created_at   DateTime? @db.Timestamptz(6)
+
+  rbac_account_status          rbac_user_account_status?
+  rbac_account_status_changes  rbac_user_account_status[] @relation("rbac_user_account_status_changed_by")
+  rbac_role_permissions_created rbac_role_permissions[]    @relation("rbac_role_permission_created_by")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model sales_documents {
+  id              String    @id
+  organization_id String?
+  owner_id        String?
+  lead_id         String?
+  kind            String?
+  number          String?
+  parent_id       String?
+  items           Json?
+  total           BigInt?
+  status          String?
+  due_date        String?
+  created_at      DateTime? @db.Timestamptz(6)
+  share_token     String?
+  approval        String?
+  approval_name   String?
+  approval_note   String?
+  approved_at     String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model sales_targets {
+  id              String  @id
+  organization_id String?
+  user_id         String?
+  month           String?
+  revenue         String?
+  deals           String?
+  activities      String?
+  created_at      String?
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model tasks {
+  id              String    @id
+  organization_id String?
+  owner_id        String?
+  lead_id         String?
+  title           String?
+  due_at          DateTime? @db.Timestamptz(6)
+  priority        String?
+  completed       String?
+  created_at      DateTime? @db.Timestamptz(6)
+  notes           String?
+  task_type       String?
+  repeat          String?
+  audio_path      String?
+  team_id         String?
+  description     String?
+  assignment_mode String?   @default("INDIVIDUAL")
+  status          String?   @default("Pending")
+  reminder_at     DateTime? @db.Timestamptz(6)
+  due_time        String?
+  created_by      String?
+  completed_by    String?
+  completed_at    DateTime? @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user_roles {
+  id                 String   @id
+  user_id            String?
+  organization_id    String?
+  role               String?
+  role_definition_id String?
+  is_primary         Boolean  @default(false)
+
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @updatedAt @db.Timestamptz(6)
+
+  role_definition rbac_role_definitions? @relation("user_role_definition", fields: [role_definition_id, role], references: [id, legacy_role_name], onDelete: Restrict, onUpdate: Restrict, map: "user_roles_role_definition_legacy_role_fkey")
+
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model teams {
+  id              String    @id
+  organization_id String
+  name            String
+  description     String?
+  leader_id       String?
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model team_members {
+  id              String    @id
+  team_id         String
+  user_id         String
+  organization_id String
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@unique([team_id, user_id], map: "uq_team_member")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model reporting_lines {
+  id              String    @id
+  organization_id String
+  manager_id      String
+  executive_id    String
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@unique([manager_id, executive_id], map: "uq_reporting_line")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model task_assignments {
+  id              String    @id
+  task_id         String
+  organization_id String
+  user_id         String
+  assigned_by     String?
+  status          String?   @default("Pending")
+  remarks         String?
+  assigned_at     DateTime? @default(now()) @db.Timestamptz(6)
+  completed_at    DateTime? @db.Timestamptz(6)
+
+  @@unique([task_id, user_id], map: "uq_task_user_assignment")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model task_activity_log {
+  id              String    @id
+  task_id         String
+  organization_id String
+  actor_id        String?
+  action          String
+  details         Json?     @default("{}")
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model company_audit_logs {
+  id                     String    @id
+  actor_id               String?
+  target_organization_id String?
+  action                 String
+  details                Json?     @default("{}")
+  ip_address             String?
+  created_at             DateTime? @default(now()) @db.Timestamptz(6)
+}
+
+model rbac_role_definitions {
+  id               String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  role_key         String   @unique(map: "rbac_role_definitions_role_key_key")
+  legacy_role_name String   @unique(map: "rbac_role_definitions_legacy_role_name_key")
+  is_platform_role Boolean  @default(false)
+  is_active        Boolean  @default(true)
+  created_at       DateTime @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  user_role_assignments user_roles[]             @relation("user_role_definition")
+  role_permissions      rbac_role_permissions[]
+
+  @@unique([id, legacy_role_name], map: "rbac_role_definitions_id_legacy_name_unique")
+  @@map("rbac_role_definitions")
+}
+
+model rbac_permission_definitions {
+  id             String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  permission_key String   @unique(map: "rbac_permission_definitions_permission_key_key")
+  category       String
+  resource       String
+  action         String
+  description    String?
+  is_active      Boolean  @default(true)
+  created_at     DateTime @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  role_permissions rbac_role_permissions[]
+
+  @@unique([category, resource, action], map: "rbac_permission_category_resource_action_unique")
+  @@map("rbac_permission_definitions")
+}
+
+model rbac_role_permissions {
+  id                       String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  role_definition_id       String
+  permission_definition_id String
+  data_scope               RbacDataScope
+  created_at               DateTime @default(now()) @db.Timestamptz(6)
+  created_by               String?
+
+  role_definition rbac_role_definitions @relation(fields: [role_definition_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  permission_definition rbac_permission_definitions @relation(fields: [permission_definition_id], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  creator profiles? @relation("rbac_role_permission_created_by", fields: [created_by], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+  @@unique([role_definition_id, permission_definition_id, data_scope], map: "rbac_role_permissions_unique")
+  @@index([permission_definition_id, role_definition_id], map: "rbac_role_permissions_permission_idx")
+  @@map("rbac_role_permissions")
+}
+
+model rbac_user_account_status {
+  user_id    String   @id
+  status     RbacAccountStatus
+  reason     String?
+  changed_by String?
+  changed_at DateTime @default(now()) @db.Timestamptz(6)
+
+  user profiles @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  changer profiles? @relation("rbac_user_account_status_changed_by", fields: [changed_by], references: [id], onDelete: SetNull, onUpdate: NoAction)
+
+  @@index([status, changed_at], map: "rbac_user_account_status_status_idx")
+  @@map("rbac_user_account_status")
+}
+
+model rbac_audit_log {
+  id                       String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  organization_id          String?
+  actor_user_id            String?
+  subject_user_id          String?
+  role_definition_id       String?
+  permission_definition_id String?
+  event_name               String
+  before_values            Json?
+  after_values             Json?
+  occurred_at              DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([organization_id, occurred_at(sort: Desc)], map: "rbac_audit_log_organization_time_idx")
+  @@index([subject_user_id, occurred_at(sort: Desc)], map: "rbac_audit_log_subject_time_idx")
+  @@index([actor_user_id, occurred_at(sort: Desc)], map: "rbac_audit_log_actor_time_idx")
+  @@index([event_name, occurred_at(sort: Desc)], map: "rbac_audit_log_event_time_idx")
+  @@map("rbac_audit_log")
+}

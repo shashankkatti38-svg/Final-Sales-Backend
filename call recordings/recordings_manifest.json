@@ -1,0 +1,80 @@
+[
+  {
+    "fileName": "call_fb28ec52-7bf5-45fc-a9c0-1e7d4251e3d8_to_916363988040.mp3",
+    "storagePath": "recordings/fb28ec52-7bf5-45fc-a9c0-1e7d4251e3d8.mp3",
+    "publicUrl": "https://kqozkwydmtmwotmzxpax.supabase.co/storage/v1/object/public/call-recordings/recordings/fb28ec52-7bf5-45fc-a9c0-1e7d4251e3d8.mp3",
+    "sizeBytes": 40169,
+    "callId": "fb28ec52-7bf5-45fc-a9c0-1e7d4251e3d8",
+    "toNumber": "916363988040",
+    "fromNumber": "12602548883",
+    "status": "completed",
+    "duration": "140",
+    "notes": null,
+    "createdAt": "2026-10-16T08:39:13.721Z"
+  },
+  {
+    "fileName": "call_sim_1792334415138_mb36c_to_6363988040.mp3",
+    "storagePath": "recordings/sim_1792334415138_mb36c.mp3",
+    "publicUrl": "https://kqozkwydmtmwotmzxpax.supabase.co/storage/v1/object/public/call-recordings/recordings/sim_1792334415138_mb36c.mp3",
+    "sizeBytes": 40169,
+    "callId": "sim_1792334415138_mb36c",
+    "toNumber": "6363988040",
+    "fromNumber": "6363988040",
+    "status": "connected",
+    "duration": "60",
+    "notes": null,
+    "createdAt": "2026-10-18T14:40:15.146Z"
+  },
+  {
+    "fileName": "call_sim_1792334437289_yfd0k_to_7795304999.mp3",
+    "storagePath": "recordings/sim_1792334437289_yfd0k.mp3",
+    "publicUrl": "https://kqozkwydmtmwotmzxpax.supabase.co/storage/v1/object/public/call-recordings/recordings/sim_1792334437289_yfd0k.mp3",
+    "sizeBytes": 40169,
+    "callId": "sim_1792334437289_yfd0k",
+    "toNumber": "7795304999",
+    "fromNumber": "6363988040",
+    "status": "connected",
+    "duration": "60",
+    "notes": null,
+    "createdAt": "2026-10-18T14:40:37.290Z"
+  },
+  {
+    "fileName": "call_34a10017-5467-4ccc-9547-ed27638d96c3_to_916363988040.mp3",
+    "storagePath": "recordings/34a10017-5467-4ccc-9547-ed27638d96c3.mp3",
+    "publicUrl": "https://kqozkwydmtmwotmzxpax.supabase.co/storage/v1/object/public/call-recordings/recordings/34a10017-5467-4ccc-9547-ed27638d96c3.mp3",
+    "sizeBytes": 40169,
+    "callId": "34a10017-5467-4ccc-9547-ed27638d96c3",
+    "toNumber": "916363988040",
+    "fromNumber": "919845395930",
+    "status": "completed",
+    "duration": "30",
+    "notes": null,
+    "createdAt": "2026-10-18T16:04:12.473Z"
+  },
+  {
+    "fileName": "default_sample_call.mp3",
+    "storagePath": "default_sample_call.mp3",
+    "publicUrl": "https://kqozkwydmtmwotmzxpax.supabase.co/storage/v1/object/public/call-recordings/default_sample_call.mp3",
+    "sizeBytes": 40169,
+    "callId": null,
+    "toNumber": null,
+    "fromNumber": null,
+    "status": "stored",
+    "duration": null,
+    "notes": null,
+    "createdAt": "2026-10-18T16:04:11.427Z"
+  },
+  {
+    "fileName": "call_8995d49f-4c24-4d06-bb2e-e83ba328e0bf_to_916363988040.mp3",
+    "storagePath": "0e379232-3f3e-43a7-ba02-7f5e3df4d788/8995d49f-4c24-4d06-bb2e-e83ba328e0bf/REc34304ce6ea03ad32b57d4e1b8ecb79a.mp3",
+    "publicUrl": "https://kqozkwydmtmwotmzxpax.supabase.co/storage/v1/object/public/call-recordings/0e379232-3f3e-43a7-ba02-7f5e3df4d788/8995d49f-4c24-4d06-bb2e-e83ba328e0bf/REc34304ce6ea03ad32b57d4e1b8ecb79a.mp3",
+    "sizeBytes": 40169,
+    "callId": "8995d49f-4c24-4d06-bb2e-e83ba328e0bf",
+    "toNumber": "916363988040",
+    "fromNumber": "12602548883",
+    "status": "completed",
+    "duration": "26",
+    "notes": null,
+    "createdAt": "2026-10-15T15:15:41.825Z"
+  }
+]

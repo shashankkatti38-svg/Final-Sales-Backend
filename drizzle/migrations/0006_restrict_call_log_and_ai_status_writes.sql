@@ -1,0 +1,1 @@
+REVOKE INSERT,UPDATE ON public.call_logs FROM authenticated; REVOKE INSERT,UPDATE ON public.ai_access_state FROM authenticated;
